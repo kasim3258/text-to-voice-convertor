@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="VoxCraft advanced text to voice studio"><title>VoxCraft — Text to Voice Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head>
+<body><div class="orb one"></div><div class="orb two"></div><div class="app">
+<header><a class="brand" href="#"><i>V</i>VoxCraft</a><div class="actions"><span>Browser powered</span><button id="theme">☾</button></div></header>
+<section class="hero"><div><small>TEXT → VOICE STUDIO</small><h1>Give your words<br><em>a natural voice.</em></h1><p>Turn scripts, notes, stories and ideas into speech with expressive browser voices and precise controls.</p></div>
+<div class="stats"><div><b id="chars">0</b><label>characters</label></div><div><b id="words">0</b><label>words</label></div><div><b id="duration">0:00</b><label>est. duration</label></div></div></section>
+<main>
+<section class="card editor"><div class="head"><div><small>SCRIPT</small><h2>Write your text</h2></div><div><button id="clear">Clear</button><button id="sample">Sample</button></div></div>
+<textarea id="text" maxlength="5000" placeholder="Type or paste something you want to hear…"></textarea><div class="meta"><span id="count">0 / 5000</span><span>Short paragraphs sound more natural.</span></div></section>
+<aside class="card controls"><div class="head"><div><small>VOICE LAB</small><h2>Voice settings</h2></div></div>
+<label>Language & voice<select id="voice"><option>Loading voices…</option></select></label>
+<div class="grid"><label>Speed <b id="rateV">1.0×</b><input id="rate" type="range" min=".5" max="2" step=".1" value="1"></label>
+<label>Pitch <b id="pitchV">1.0</b><input id="pitch" type="range" min=".5" max="1.5" step=".1" value="1"></label>
+<label class="wide">Volume <b id="volV">100%</b><input id="vol" type="range" min="0" max="1" step=".05" value="1"></label></div>
+<div class="buttons"><button id="speak" class="primary">▶ Speak</button><button id="pause">Ⅱ Pause</button><button id="stop">■ Stop</button></div>
+<div class="playback"><div><span>Playback</span><b id="status">Ready</b></div><div class="bar"><i id="fill"></i></div></div>
+<div class="note">✦ <div><b>Smart playback</b><p>Long text is automatically split into smaller chunks for reliable browser speech.</p></div></div></aside>
+<section class="card presets"><div class="head"><div><small>QUICK START</small><h2>Voice presets</h2></div></div>
+<div class="presetGrid"><button data-r=".85" data-p="1.05">🎧 <span><b>Podcast</b><small>Warm & relaxed</small></span></button><button data-r="1" data-p="1">🎙️ <span><b>Natural</b><small>Balanced delivery</small></span></button><button data-r="1.15" data-p="1.08">📢 <span><b>Presenter</b><small>Clear & energetic</small></span></button><button data-r=".72" data-p=".92">📖 <span><b>Storyteller</b><small>Slow & expressive</small></span></button></div></section>
+</main><footer>VoxCraft uses the Web Speech API. Available voices depend on your browser and operating system.</footer></div><script src="script.js"></script></body></html>
