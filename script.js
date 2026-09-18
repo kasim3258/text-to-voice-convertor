@@ -1,0 +1,18 @@
+const $=id=>document.getElementById(id),S={voices:[],chunks:[],i:0,playing:false};
+if(localStorage.getItem("voxcraft-theme")==="light")document.body.classList.add("light");
+$("theme").onclick=()=>{document.body.classList.toggle("light");localStorage.setItem("voxcraft-theme",document.body.classList.contains("light")?"light":"dark")};
+function voices(){S.voices=speechSynthesis.getVoices();const x=$("voice");x.innerHTML="";const v=[...S.voices].sort((a,b)=>a.name.localeCompare(b.name));if(!v.length){x.innerHTML="<option>Default system voice</option>";return}v.forEach((q,i)=>{const o=document.createElement("option");o.value=i;o.textContent=q.name+" — "+q.lang;x.appendChild(o)});const p=v.findIndex(q=>/^en-(IN|GB|US)/i.test(q.lang));if(p>=0)x.value=p}
+speechSynthesis.onvoiceschanged=voices;voices();
+function stats(){const t=$("text").value.trim(),c=t.length,w=t?t.split(/\s+/).length:0,s=Math.round(w/2.25);$("chars").textContent=c;$("words").textContent=w;$("count").textContent=c+" / 5000";$("duration").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+$("text").oninput=stats;
+$("sample").onclick=()=>{$("text").value="Welcome to VoxCraft. This is your browser-based text to voice studio. Write a story, rehearse a presentation, record a lesson, or make your ideas easier to listen to. Adjust speed and pitch until the voice feels right, then press Speak.";stats()};
+function chunks(t,max=260){const ss=t.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[t],out=[];let cur="";for(const s of ss){if((cur+" "+s).trim().length>max&&cur){out.push(cur.trim());cur=s}else cur+=" "+s}if(cur.trim())out.push(cur.trim());return out}
+function status(t){$("status").textContent=t}function fill(n){$("fill").style.width=Math.max(0,Math.min(100,n))+"%"}function voice(){return S.voices[Number($("voice").value)]||null}
+function next(){if(!S.playing||S.i>=S.chunks.length){S.playing=false;status("Ready");fill(100);return}const u=new SpeechSynthesisUtterance(S.chunks[S.i]);u.rate=+$("rate").value;u.pitch=+$("pitch").value;u.volume=+$("vol").value;const v=voice();if(v)u.voice=v;u.onstart=()=>status("Speaking "+(S.i+1)+"/"+S.chunks.length);u.onend=()=>{S.i++;fill(S.i/S.chunks.length*100);setTimeout(next,40)};u.onerror=()=>{S.playing=false;status("Playback error")};speechSynthesis.speak(u)}
+$("speak").onclick=()=>{const t=$("text").value.trim();if(!t){status("Write something first");$("text").focus();return}if(speechSynthesis.paused){speechSynthesis.resume();S.playing=true;status("Speaking");return}speechSynthesis.cancel();S.chunks=chunks(t);S.i=0;S.playing=true;fill(0);next()};
+$("pause").onclick=()=>{if(speechSynthesis.speaking&&!speechSynthesis.paused){speechSynthesis.pause();status("Paused")}else if(speechSynthesis.paused){speechSynthesis.resume();status("Speaking")}};
+$("stop").onclick=()=>{speechSynthesis.cancel();S.playing=false;S.i=0;status("Stopped");fill(0)};
+$("clear").onclick=()=>{speechSynthesis.cancel();$("text").value="";S.playing=false;stats();status("Ready");fill(0)};
+$("rate").oninput=e=>$("rateV").textContent=(+e.target.value).toFixed(1)+"×";$("pitch").oninput=e=>$("pitchV").textContent=(+e.target.value).toFixed(1);$("vol").oninput=e=>$("volV").textContent=Math.round(+e.target.value*100)+"%";
+document.querySelectorAll(".presetGrid button").forEach(b=>b.onclick=()=>{$("rate").value=b.dataset.r;$("pitch").value=b.dataset.p;$("rateV").textContent=(+b.dataset.r).toFixed(1)+"×";$("pitchV").textContent=(+b.dataset.p).toFixed(1)});
+document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")$("speak").click()});stats();status("Ready");
